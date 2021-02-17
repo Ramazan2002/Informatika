@@ -16,7 +16,5 @@ with open ('db2.txt','r', encoding = 'utf-8') as f:
         number = number.replace(')', '')
         number = number.replace('-', '')
         user[2] = number
-    same_ips = []
-    #print(text)
-    #print(russian_numbers)
-    print(same_ips)
+    print(text)
+    
