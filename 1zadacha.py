@@ -27,7 +27,7 @@ def salt_lang(string):
 	strr = ''
 	for elem in string:
 		if elem in lst:
-			strr +=elem + 'c' + elem
+			strr += elem + 'c' + elem
 		else:
 			strr += elem
 	return strr
