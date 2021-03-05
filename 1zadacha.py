@@ -24,11 +24,13 @@ def summarize(n):
 
 def salt_lang(string):
 	lst = ['а', 'я', 'и', 'ю', 'ы', 'о', 'э', 'е', 'у']
-	for c in string:
-		if c in lst:
-			string = string.replace(c, f'{c}c{c}')
-
-	return string
+	strr = ''
+	for elem in string:
+		if elem in lst:
+			strr +=elem + 'c' + elem
+		else:
+			strr += elem
+	return strr
 
 print(fill(mydict, 20))
 #print(no_dup(mydict))
