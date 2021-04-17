@@ -1,0 +1,12 @@
+data = (line for line in open('dataset.scv', 'r'))
+data = (tuple(line.replace('\n', '').split(';')) for line in data)
+print(next(data))
+data = (line for line in data if line[-1] == 'a')
+all_raised = sum(int(line[-2]) for line in data)
+weight_rised = all_raised / (30e6 - 10e6) * 1000
+print(weight_rised)
+data = (line for line in open('dataset.scv', 'r'))
+data = (tuple(line.replace('\n', '').split(';')) for line in data)
+data = (line for line in data if line[-1] == 'a')
+data = ((line[0], line[2], int(line[-2])) for line in data if int(line[-2]) < weight_rised)
+print(list(data))
