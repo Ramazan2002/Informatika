@@ -37,7 +37,6 @@ for i in range(1,10): # i - кол-во страниц
         y[3] = int(y[3].replace(' ', ''))
         y[4] = y[4].replace('-', '').replace(' ','')
         data.append(tuple(y))
-print(data)
 data = filter(lambda x: (x[2]<=6_000_000) and (x[3]>120_000) and
              ((x[0] != 'р-н Ново-Савиновский') and (x[0] != 'р-н Вахитовский'))
              and (x[1] > 15) and (x[-1] == 'Застройщик') and ((int(line[0])==int(x[4][2:5]))
