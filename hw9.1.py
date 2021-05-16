@@ -131,5 +131,5 @@ if __name__ == '__main__':
     pool2.close()
     pool1.join()
     pool2.join()
-    with open('different.txt', 'w+', encoding='utf-8') as f:
+    with open('different.txt', 'w', encoding='utf-8') as f:
         print('New', y - x, file=f)
