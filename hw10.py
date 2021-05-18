@@ -7,7 +7,6 @@ for line in a:
 
 for i in range(len(a)):
     sum = 0
-    k = 0
     for j in range(len(a[i])):
         if i == 0:
             if j == 0:
