@@ -12,7 +12,6 @@ while True:
     print(data.decode('UTF-8'))
     a.append(data)
     conn.send(a[0].upper())
-    a.pop()
     if not data:
         break
 
