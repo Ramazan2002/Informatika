@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 # Create your views here.
 BAD_NUMS = [2,3,4]
-visits_main = []
+
 
 def main(request):
     k = request.session.get('count_main', 1)
