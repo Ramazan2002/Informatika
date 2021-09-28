@@ -1,12 +1,14 @@
 from django.shortcuts import render
-
 # Create your views here.
 BAD_NUMS = [2,3,4]
-
+A = 0
+B = 0
+C = 0
 
 def main(request):
-    k = request.session.get('count_main', 1)
-    request.session['count_main'] = k+1
+    global A
+    k = A + 1
+    A += 1
     after_k = 'раз'
     if request.method == "GET":
         if k % 10 in BAD_NUMS and ((k < 100 and (k > 20 or k<10)) or (k > 100 and (k > 20 or k < 10))):
@@ -16,8 +18,9 @@ def main(request):
         pass
 
 def profile(request):
-    k = request.session.get('count_profile', 1)
-    request.session['count_profile'] = k + 1
+    global B
+    k = B + 1
+    B += 1
     after_k = 'раз'
     if request.method == "GET":
         if k % 10 in BAD_NUMS and ((k < 100 and (k > 20 or k<10)) or (k > 100 and (k > 20 or k < 10))):
@@ -27,8 +30,9 @@ def profile(request):
         pass
 
 def news(request):
-    k = request.session.get('count_news', 1)
-    request.session['count_news'] = k + 1
+    global C
+    k = C + 1
+    C += 1
     after_k = 'раз'
     if request.method == "GET":
         if k % 10 in BAD_NUMS and ((k < 100 and (k > 20 or k<10)) or (k > 100 and (k > 20 or k < 10))):
