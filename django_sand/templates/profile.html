@@ -18,6 +18,14 @@
         <p>Вес: {{ weight }}</p>
         <p>ИМТ: {{ imt }}</p>
         <p>Диагноз: {{ description }}</p>
+        {%  if coef_p %}
+            <p>ваш ИМТ больше среднего на {{ coef }}% среди всех</p>
+        {% else %}
+            <p>ваш ИМТ меньше среднего на {{ coef }}% среди всех</p>
+        {% endif %}
+        {% if size == 'xxl' or size == 'xxs' %}
+            <p style="color:red">Для вашего размера одежды (талии) калькулятор может дать ошибочный ответ</p>
+        {% endif %}
         <button type="button" onclick="history.back()">Назад</button>
     {% endif %}
 

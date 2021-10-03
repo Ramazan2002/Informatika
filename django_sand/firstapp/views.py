@@ -6,6 +6,8 @@ A = 0
 B = 0
 C = 0
 
+imt_values = [(25.39, 18)]
+
 def main(request):
     global A
     k = A + 1
@@ -22,11 +24,12 @@ def profile(request):
     if request.method == 'POST':
         form = SimpleTextForm(request.POST)
         if form.is_valid():
-            name = request.POST['name']
-            age = request.POST['age']
-            height = int(request.POST['height'])
-            weight = int(request.POST['weight'])
-            imt = weight/(height/100)**2
+            name = form.cleaned_data['name']
+            age = form.cleaned_data['age']
+            height = form.cleaned_data['height']
+            weight = form.cleaned_data['weight']
+            size = form.cleaned_data['size']
+            imt = round(weight/(height/100)**2, 2)
             if imt >= 40:
                 description = 'Ожирение 3-й степени'
             elif 35 <= imt < 40:
@@ -41,9 +44,14 @@ def profile(request):
                 description = 'Недостаточная масса тела (дефицит)'
             else:
                 description = 'Выраженный дефицит массы тела'
-            context = {'name': name, 'age': age, 'height': height,
-                       'weight': weight, 'imt': round(imt, 2), 'description': description}
 
+            all_imt, all_ages = zip(*imt_values)
+            coefficient = round((imt / (sum(all_imt)/len(all_imt)) - 1), 2) * 100
+            coef_positive = coefficient >= 0
+            coefficient = abs(coefficient)
+            context = {'name': name, 'age': age, 'height': height, 'weight': weight, 'coef_p': coef_positive,
+                       'imt': imt, 'description': description, 'size': size, 'coef': coefficient}
+            imt_values.append((imt, age))
             return render(request, 'profile.html', context)
     else:
         form = SimpleTextForm()
