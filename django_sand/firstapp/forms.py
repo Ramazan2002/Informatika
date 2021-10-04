@@ -10,9 +10,16 @@ SIZES = (
 	('xxl', 'XXL')
 )
 
+GENDERS = (
+	('m', 'male'),
+	('f', 'female'),
+	('n', 'хз кто')
+)
+
 class SimpleTextForm(forms.Form):
-	name = forms.CharField(label='Имя',max_length=35)
-	age = forms.IntegerField(label='Возраст')
-	height = forms.FloatField(label='Рост')
-	weight = forms.FloatField(label='Вес')
+	name = forms.CharField(max_length=35)
+	age = forms.IntegerField()
+	height = forms.FloatField()
+	weight = forms.FloatField()
+	gender = forms.ChoiceField(choices=GENDERS)
 	size = forms.ChoiceField(choices = SIZES, widget=forms.RadioSelect)

@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import SimpleTextForm
+from .models import Record
 # Create your views here.
 BAD_NUMS = [2,3,4]
 A = 0
@@ -28,8 +29,20 @@ def profile(request):
             age = form.cleaned_data['age']
             height = form.cleaned_data['height']
             weight = form.cleaned_data['weight']
+            gender = form.cleaned_data['gender']
             size = form.cleaned_data['size']
             imt = round(weight/(height/100)**2, 2)
+
+
+            if gender == 'm':
+                obr = 'Mr'
+            elif gender == 'f':
+                obr = 'Ms'
+            else:
+                obr = 'Not a human'
+            new_record = Record(name=name, age=age, height=height,
+                                weight=weight, obraschenie=obr)
+            new_record.save()
             if imt >= 40:
                 description = 'Ожирение 3-й степени'
             elif 35 <= imt < 40:
