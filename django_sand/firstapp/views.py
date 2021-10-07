@@ -7,8 +7,6 @@ A = 0
 B = 0
 C = 0
 
-imt_values = [(25.39, 18)]
-
 def main(request):
     global A
     k = A + 1
@@ -40,9 +38,6 @@ def profile(request):
                 obr = 'Ms'
             else:
                 obr = 'Not a human'
-            new_record = Record(name=name, age=age, height=height,
-                                weight=weight, obraschenie=obr)
-            new_record.save()
             if imt >= 40:
                 description = 'Ожирение 3-й степени'
             elif 35 <= imt < 40:
@@ -58,13 +53,16 @@ def profile(request):
             else:
                 description = 'Выраженный дефицит массы тела'
 
-            all_imt, all_ages = zip(*imt_values)
+            all_imt = Record.objects.values_list('imt', flat=True)
             coefficient = round((imt / (sum(all_imt)/len(all_imt)) - 1), 2) * 100
             coef_positive = coefficient >= 0
             coefficient = abs(coefficient)
             context = {'name': name, 'age': age, 'height': height, 'weight': weight, 'coef_p': coef_positive,
                        'imt': imt, 'description': description, 'size': size, 'coef': coefficient}
-            imt_values.append((imt, age))
+
+            new_record = Record(name=name, age=age, weight=weight, height=height,
+                                gender=gender, size=size, obraschenie=obr, imt=imt)
+            new_record.save()
             return render(request, 'profile.html', context)
     else:
         form = SimpleTextForm()
