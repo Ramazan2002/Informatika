@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from .forms import SimpleTextForm
 from .models import Record
 # Create your views here.
@@ -68,14 +68,54 @@ def profile(request):
         form = SimpleTextForm()
     return render(request, 'profile.html', context={'form': form})
 
-def news(request):
-    global C
-    k = C + 1
-    C += 1
-    after_k = 'раз'
-    if request.method == "GET":
-        if k % 10 in BAD_NUMS and ((k < 100 and (k > 20 or k<10)) or (k > 100 and (k > 20 or k < 10))):
-            after_k = 'раза'
-        return render(request, 'news.html', context={'count': k, 'after_k': after_k})
+
+def change_profile(request, pk):
+    obj = get_object_or_404(Record, id=pk)
+    if request.method == 'GET':
+        form = SimpleTextForm()
+        return render(request, 'change_profile.html', context={'obj': obj, 'form': form})
+
     else:
-        pass
+        form = SimpleTextForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            age = form.cleaned_data['age']
+            height = form.cleaned_data['height']
+            weight = form.cleaned_data['weight']
+            gender = form.cleaned_data['gender']
+            imt = round(weight / (height / 100) ** 2, 2)
+            if gender == 'm':
+                obr = 'Mr'
+            elif gender == 'f':
+                obr = 'Ms'
+            else:
+                obr = 'Not a human'
+            obj.name = name
+            obj.age = age
+            obj.weight = weight
+            obj.height = height
+            obj.gender = gender
+            obj.imt = imt
+            obj.obraschenie = obr
+            obj.save()
+
+            return redirect('/news')
+        return HttpResponse('wtf')
+
+def delete_profile(request, pk):
+    obj = get_object_or_404(Record, id=pk)
+    if request.method == "GET":
+        return render(request, 'delete_profile.html', {'obj': obj})
+
+    else:
+        answer = request.POST['answer']
+        if answer == "Yes":
+            obj.delete()
+            return redirect('/news')
+        else:
+            return redirect('/profile')
+
+def news(request):
+    objects = Record.objects.all()
+    if request.method == "GET":
+        return render(request, 'news.html', context={'objects': objects})

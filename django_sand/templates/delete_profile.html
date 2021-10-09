@@ -1,0 +1,14 @@
+<h1 align="center">Удаление профиля</h1>
+
+<div align='center' class="record">
+        <p>Имя: {{ obj.name }}</p>
+        <p>Возраст: {{ obj.age }}</p>
+        <p>Рост: {{ obj.height }}</p>
+        <p>Вес: {{ obj.weight }}</p>
+</div>
+
+<form method="post" action="{% url 'delete_profile' obj.id %}">
+    {% csrf_token %}
+    <input type="submit" name="answer" value="Yes">
+    <input type="submit" name="answer" value="No">
+</form>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Account</title>
+    <style>
+        .record {
+            width: 200px;
+            height: 100%;
+            background: rgba(111, 255, 204, 0.38);
+            padding: 10px;
+            margin: 5px;
+        }
+
+    </style>
+</head>
+<body>
+    <button type="button" onclick="history.back()">Назад</button>
+    <h2>Редактировать профиль</h2>
+    <div align='center' class="record">
+        <p>Имя: {{ obj.name }}</p>
+        <p>Возраст: {{ obj.age }}</p>
+        <p>Рост: {{ obj.height }}</p>
+        <p>Вес: {{ obj.weight }}</p>
+    </div>
+    <form method="post" action="{% url 'change_profile' obj.id %}">
+        {% csrf_token %}
+        <label for="name">Имя</label>
+        <input type="text" name="name" value="{{ obj.name }}">
+
+        <label for="age">Возраст</label>
+        <input type="number" name="age" value="{{ obj.age }}">
+
+        <label for="height">Рост</label>
+        <input type="number" name="height" value="{{ obj.height }}">
+
+        <label for="weight">Вес</label>
+        <input type="number" name="weight" value="{{ obj.weight }}">
+
+        <label for="gender">Пол</label>
+        <select id="gender" name="gender">
+            <option value="n">neutral</option>
+            <option value="f">female</option>
+            <option value="m">male</option>
+        </select>
+        <input type="submit">
+    </form>
+</body>
+</html>
