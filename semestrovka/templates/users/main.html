@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+<head>
+    {% block title %}
+        AutoDP
+    {% endblock %}
+</head>
+<body>
+    {% block navigation %}
+        {% if not user_id %}
+            <div class="btn-group" role="group">
+            <a href="{% url 'login' %}" class="btn btn-dark " role="button">Log In</a>
+            <a href="{% url 'register' %}" class="btn btn-dark" role="button">Sign Up</a>
+            </div>
+
+        {% else %}
+            <div class="btn-group" role="group">
+                <a href="{% url 'create_post' %}" class="btn btn-dark" role="button">Create Post</a>
+                <div class="btn-group" role="group">
+                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ profile.name }}
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">
+                        <a class="dropdown-item" href="{% url 'profile' user_id %}">Profile</a>
+                        <a class="dropdown-item" href="{% url 'profile_posts' user_id %}">My Posts</a>
+                        <a class="dropdown-item" href="{% url 'profile_settings' %}">Settings</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'logout' %}">Log Out</a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endblock %}
+    {% block content %}
+{#        <h2 class="mx-2 pt-3">Latest Posts</h2>#}
+        <div class="p-3">
+            {% for post in posts %}
+                <div class="card bg-light mb-4 w-50" style="cursor: pointer;" onclick="location.href='{% url 'post' pk=post.pk %}'">
+                    <div class="card-body">
+                        <h3 class="card-title">{{ post.title }}</h3>
+                        <p class="card-text">{{ post.body|linebreaksbr }}</p>
+                        <p class="card-text"><small class="text-muted">Publicated by {{ post.author }} at {{ post.publication_date }}</small></p>
+                    </div>
+                    <div class="card-body pt-0">
+                        {% with post.imagesforpost_set.all|first as image %}
+                            <img class="card-img-bottom img-fluid rounded" src="{{ image.image.url }}" style="width: 100%; height: 45vw; object-fit: cover; image-rendering: auto";>
+                        {% endwith %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endblock %}
+
+</body>

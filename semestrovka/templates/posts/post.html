@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+<head>
+    {% block title %}
+        {{ post.title }}
+    {% endblock %}
+</head>
+<body>
+    {% block content %}
+        <h3>Заголовок: {{ post.title }}</h3>
+        {% for image in post.imagesforpost_set.all %}
+            <img src="{{ image.image.url }}">
+        {% endfor %}
+        <p>Текст: {{ post.body|linebreaksbr }}</p>
+        <p>Автор: <a href="{% url 'profile' pk=post.author.pk %}">{{ post.author }}</a></p>
+        <p>Дата публикации: {{ post.publication_date }}</p>
+        {% if post.author.user == profile.user or profile.user.group.name == 'admin' or profile.user.group.name == 'moder' %}
+            <button><a href="{% url 'update_post' pk=post.id %}">Изменить</a></button>
+            <button><a href="{% url 'delete_post' pk=post.id %}">Удалить</a></button>
+        {% endif %}
+
+        {% if profile %}
+        <form method="post" id="for_comment" data-href="{% url 'create_comment' post.pk %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Оставить комментарий">
+        </form>
+        {% endif %}
+
+        <div id="all_comments">
+            <h3>Комментарии</h3>
+            {% for comment in comments %}
+                <p>{{ comment.text }}</p>
+                <p><a href="{% url 'profile' comment.author.pk%}">{{ comment.author }}</a></p>
+                <p>{{ comment.publication_date }}</p>
+            {% endfor %}
+        </div>
+    {% endblock %}
+
+    {% block javascript %}
+        <script>
+            $("#for_comment").submit(function (e) {
+                e.preventDefault();
+                var serializedData = $(this).serialize();
+                var postData = {csrfmiddlewaretoken: '{{ csrf_token }}'}
+                $.ajax({
+                    type: 'POST',
+                    url: "{% url 'create_comment' post.pk%}",
+                    data: serializedData, postData,
+                    success: function (response) {
+                        $("#for_comment").trigger('reset');
+                        var instance = JSON.parse(response["instance"]);
+                        var fields = instance[0]["fields"];
+                        $("#all_comments").prepend(`
+                            <p>${fields["text"]}</p>
+                            <p>${fields["author"]}</p>
+                            <p>${fields["publication_date"]}</p>`
+                        )
+                    },
+                    error: function (response) {
+                        alert(response["responseJSON"]["error"]);
+                    }
+                })
+            })
+        </script>
+    {% endblock javascript %}
+</body>

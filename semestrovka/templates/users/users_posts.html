@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+<head>
+    {% block title %}
+        {{ profile.name }}'s Posts
+    {% endblock %}
+</head>
+<body>
+    {% block content %}
+
+        {% if not posts %}
+            {% if pk == profile.pk %}
+                <h2>You don't have your own publications yet.</h2>
+                <h2>It's time to <a href="{% url 'create_post' %}">create</a> them!</h2>
+            {% else %}
+                <h2>This user has no posts.</h2>
+            {% endif %}
+        {% endif %}
+
+        {% for post in posts %}
+            <div>
+                <h3><a href="{% url 'post' pk=post.pk%}">{{ post.title }}</a></h3>
+            </div>
+        {% endfor %}
+    {% endblock %}
+</body>

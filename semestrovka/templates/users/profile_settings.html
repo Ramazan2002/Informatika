@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+<head>
+    {% block title %}
+        Settings
+    {% endblock %}
+</head>
+<body>
+    {% block content %}
+        {% if success %}
+            <p>Changes saved</p>
+        {% endif %}
+
+        {% if failure %}
+            <p>This email already exists</p>
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Save Changes">
+        </form>
+        <button><a href="{% url 'profile' pk=pk %}">Back</a></button>
+    {% endblock %}
+</body>

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+<head>
+    {% block title %}
+        {{ profile.name }}'s Profile
+    {% endblock %}
+</head>
+<body>
+    {% block content %}
+        <img src="{{ profile.photo.url }}">
+        {{ profile.name }}
+        <p>Написано постов: {{ profile.user.posts_written }}</p>
+        {{ profile.email }}
+
+
+        {% if not to_show %}
+            <button><a href="{% url 'profile_posts' pk=profile.user.pk %}">My Posts</a></button>
+            <button><a href="{% url 'profile_settings'%}">Edit Profile</a></button>
+            <button><a href="{% url 'logout' %}">Log Out</a></button>
+        {% else %}
+            <button><a href="{% url 'profile_posts' pk=profile.user.pk %}">Users Posts</a></button>
+        {% endif %}
+
+    {% endblock %}
+</body>
+</html>

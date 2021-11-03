@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+<head>
+    {% block title %}
+        Sign In
+    {% endblock %}
+</head>
+<body>
+    {% block content %}
+        <div class="container h-100">
+            <div class="text-center">
+                <div class="col-5 mx-auto pt-5">
+                    <div style="background: #F3F6F4 !important" class="jumbotron text-dark">
+                        {% if failure %}
+                           <div class="alert alert-danger" role="alert">
+                                Данный логин уже занят
+                           </div>
+                        {% endif %}
+                        <form method="post">
+                            {% csrf_token %}
+                            {% if form.errors  %}
+                                <div class="alert alert-danger">
+                                    <button type="button" class="close" data-dismiss="alert">×</button>
+                                    {% for field in form %}
+                                        {% if field.errors %}
+                                        <li>{{ field.errors|striptags }}</li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-group row justify-content-center align-self-center">
+                                <label for="id_login">Login</label>
+                                <input type="text" class="form-control" name="login" id="id_login" placeholder="Enter login" required>
+                            </div>
+                            <div class="form-group row justify-content-center align-self-center">
+                                <label for="id_password">Password</label>
+                                <input type="password" class="form-control" name="password" id="id_password" aria-describedby="passwordHelp" placeholder="Enter password" required>
+                                <small id="passwordHelp" class="form-text text-muted">We'll never share your password with anyone else.</small>
+                            </div>
+                            <input class="btn btn-dark mt-2" type="submit" value="Sign Up">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+</body>
+</html>
