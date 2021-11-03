@@ -118,13 +118,14 @@ def profile_posts(request, pk):
             profile = UserProfile.objects.get(user=user)
             if profile.pk == pk:
                 posts = Post.objects.filter(author=profile)
-                return render(request, 'users/users_posts.html', {'posts': posts, 'profile': profile, 'pk': pk})
+                return render(request, 'users/users_posts.html', {'posts': posts, 'profile': profile,
+                                                                  'pk': pk, 'user_id': user_id})
 
         user = CustomUser.objects.get(pk=pk)
         profile = UserProfile.objects.get(user=user)
         posts = Post.objects.filter(author=profile)
         if len(posts) == 0:
-            return render(request, 'users/users_posts.html', {'posts': posts, 'profile': profile, 'pk': request.session['user_id']})
+            return render(request, 'users/users_posts.html', {'posts': posts, 'profile': profile, 'pk': user_id})
         return render(request, 'users/users_posts.html', {'posts': posts, 'profile': profile, 'pk': pk})
 
 

@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, HttpResponse, get_list_or_404
 from django.http import JsonResponse
 from django.core import serializers
 from django.urls import reverse
@@ -14,20 +14,23 @@ class show(View):
     def get(self, request, pk):
         post = Post.objects.get(id=pk)
         user_id = request.session.get('user_id', None)
-        comments = post.comment_set.all
+        comments = reversed(post.comment_set.all())
         form = CreateCommentForm()
         if user_id:
             user = CustomUser.objects.get(pk = user_id)
             profile = UserProfile.objects.get(user=user)
-            return render(request, 'posts/post.html', {'post': post, 'profile': profile, 'form': form, 'comments': comments})
+            return render(request, 'posts/post.html', {'post': post, 'profile': profile, 'form': form,
+                                                       'comments': comments, 'user_id': user_id})
+
         return render(request, 'posts/post.html', {'post': post, 'form': form, 'comments': comments})
 
 
 @login_required
 def create(request):
+    user_id = request.session['user_id']
+    user = CustomUser.objects.get(pk=user_id)
+    profile = UserProfile.objects.get(user=user)
     if request.method == 'POST':
-        user = CustomUser.objects.get(pk=request.session['user_id'])
-        profile = UserProfile.objects.get(user=user)
         form = CreateFullPostForm(request.POST, request.FILES or None)
         files = request.FILES.getlist('images')
         if form.is_valid():
@@ -42,7 +45,7 @@ def create(request):
 
     else:
         form = CreateFullPostForm()
-        return render(request, 'posts/create_post.html', {'form': form})
+        return render(request, 'posts/create_post.html', {'form': form, 'profile': profile, 'user_id': user_id})
 
 
 @login_required
