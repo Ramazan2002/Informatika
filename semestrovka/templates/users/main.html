@@ -36,13 +36,13 @@
                 <div class="card bg-light mb-4 w-75" style="cursor: pointer;" onclick="location.href='{% url 'post' pk=post.pk %}'">
                     <div class="card-body">
                         <h3 class="card-title">{{ post.title }}</h3>
-                        <p class="card-text">{{ post.body|linebreaksbr }}</p>
+                        <p class="card-text" style="overflow: hidden; text-overflow: ellipsis;display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;">{{ post.body|linebreaksbr }}</p>
                         <p class="card-text"><small class="text-muted">Publicated by {{ post.author }} at {{ post.publication_date }}</small></p>
                     </div>
                     {% with post.imagesforpost_set.all|first as image %}
                         {% if image %}
                             <div class="card-body pt-0">
-                                <img class="card-img-bottom img-fluid rounded" src="{{ image.image.url }}" style="width: 100%; height: 45vw; object-fit: cover; image-rendering: auto";>
+                                <img class="card-img-bottom img-fluid rounded" src="{{ image.image.url }}" style="width: 100%; height: 35vw; object-fit: cover; image-rendering: auto";>
                             </div>
                         {% endif %}
                     {% endwith %}

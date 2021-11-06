@@ -1,13 +1,12 @@
-from django.shortcuts import render, redirect, HttpResponse, get_list_or_404
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.core import serializers
 from django.urls import reverse
 from .forms import CreateFullPostForm, CreateCommentForm
-from .models import Post, ImagesForPost, Comment
+from .models import Post, ImagesForPost
 from users.models import CustomUser, UserProfile
 from users.views import login_required
 from django.views import View
-# Create your views here.
 
 
 class show(View):
@@ -62,10 +61,11 @@ def update_post(request, pk):
             saved_form.save()
             for f in files:
                 ImagesForPost(post=saved_form, image=f).save()
-            return render(request, 'posts/update_post.html', {'form': form, 'pk': post.pk, 'success': 1})
+            return render(request, 'posts/update_post.html', {'form': form, 'pk': post.pk,
+                                                              'success': 1, 'profile': post.author})
     else:
         form = CreateFullPostForm(initial=data)
-        return render(request, 'posts/update_post.html', {'form': form, 'pk': post.pk})
+        return render(request, 'posts/update_post.html', {'form': form, 'pk': post.pk, 'profile': post.author})
 
 @login_required
 def delete_post(request, pk):

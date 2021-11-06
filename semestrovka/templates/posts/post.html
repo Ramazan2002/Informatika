@@ -56,12 +56,12 @@
                             </div>
                         {% endif %}
                     {% endwith %}
-                    <p class="lead">{{ post.body|linebreaksbr }}</p>
+                    <p class="lead mt-3">{{ post.body|linebreaksbr }}</p>
                     <p>Author: <a href="{% url 'profile' pk=post.author.pk %}">{{ post.author }}</a></p>
                     <p>Date of publication: {{ post.publication_date }}</p>
                     {% if post.author.user == profile.user or profile.user.group.name == 'admin' or profile.user.group.name == 'moder' %}
                         <a class="btn btn-dark" href="{% url 'update_post' pk=post.id %}" role="button">Redact</a>
-                        <a class="btn btn-dark" href="{% url 'delete_post' pk=post.id %}" role="button">Delete post</a>
+                        <a class="btn btn-danger" href="{% url 'delete_post' pk=post.id %}" role="button">Delete post</a>
                     {% endif %}
                     {% if profile %}
                     <form method="post" id="for_comment" data-href="{% url 'create_comment' post.pk %}">
@@ -79,7 +79,7 @@
                             <div class="card mb-2" style="width: 40rem;">
                                 <div class="card-body">
                                     <h5 class="card-title"><a href="{% url 'profile' comment.author.pk%}">{{ comment.author }}</a></h5>
-                                    <p class="card-text">{{ comment.text }}</p>
+                                    <p class="card-text">{{ comment.text|linebreaksbr }}</p>
                                     <p class="card-text ">{{ comment.publication_date }}</p>
                                 </div>
                             </div>
@@ -104,12 +104,13 @@
                         $("#for_comment").trigger('reset');
                         var instance = JSON.parse(response["instance"]);
                         var fields = instance[0]["fields"];
+                        var date = new Date(fields["publication_date"])
                         $("#all_comments").prepend(`
                             <div class="card mb-2" style="width: 40rem;">
                                 <div class="card-body">
                                     <h5 class="card-title"><a href="/profile/${fields["author"]}">${fields["author"]}</a></h5>
-                                    <p class="card-text">${fields["text"]}</p>
-                                    <p class="card-text">${fields["publication_date"]}</p>
+                                    <p class="card-text" style="white-space: pre-wrap">${fields["text"]}</p>
+                                    <p class="card-text">${date}</p>
                                 </div>
                             </div>`
                         )

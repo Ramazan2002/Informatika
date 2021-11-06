@@ -2,7 +2,6 @@ from django.db import models
 from users.models import CustomUser, UserProfile
 from django.utils.timezone import now
 
-# Create your models here.
 
 class Post(models.Model):
     author = models.ForeignKey(UserProfile, on_delete=models.CASCADE, editable=False)

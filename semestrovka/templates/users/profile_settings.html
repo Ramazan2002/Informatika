@@ -6,19 +6,38 @@
 </head>
 <body>
     {% block content %}
-        {% if success %}
-            <p>Changes saved</p>
-        {% endif %}
+        <div class="container">
+            <div class="text-center">
+                <div class="col-5 mx-auto pt-4">
+                    <div style="background: #F3F6F4 !important" class="jumbotron text-dark pt-4 pb-4">
+                        {% if success %}
+                            <div class="alert alert-success" role="alert">
+                                Changes saved
+                            </div>
+                        {% endif %}
 
-        {% if failure %}
-            <p>This email already exists</p>
-        {% endif %}
+                        {% if failure %}
+                            <div class="alert alert-danger" role="alert">
+                                This email already exists
+                            </div>
+                        {% endif %}
 
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" value="Save Changes">
-        </form>
-        <button><a href="{% url 'profile' pk=pk %}">Back</a></button>
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {% for field in form %}
+                                <div class="form-group">
+                                    {{ field.label }}
+                                    {{ field }}
+                                </div>
+                            {% endfor %}
+                            <div class="pt-3">
+                                <input class="btn btn-success" type="submit" value="Save">
+                                <a class="btn btn-dark" href="{% url 'profile' pk=pk %}" role="button">Back</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     {% endblock %}
 </body>

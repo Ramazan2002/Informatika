@@ -1,7 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
-from .models import UserProfile
+from .models import UserProfile, CustomUser, Group
 
 class RegistrationForm(forms.Form):
     login = forms.CharField(max_length=20, required=True)
@@ -29,6 +29,24 @@ class EditProfile(forms.ModelForm):
     password = forms.CharField(max_length=20, min_length=5, widget=forms.PasswordInput, label='Change password',
                                required=False)
 
+    photo = forms.ImageField(label=_('Photo'), widget=forms.FileInput)
     class Meta:
         model = UserProfile
         fields = ['name', 'email', 'password', 'photo']
+
+    def __init__(self, *args, **kwargs):
+        super(EditProfile, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+        self.fields['photo'].widget.attrs['class'] = 'form-control-file'
+
+class EditGroup(forms.ModelForm):
+    group = forms.ModelChoiceField(queryset=Group.objects, empty_label=None)
+    class Meta:
+        model = CustomUser
+        fields = ['group']
+
+    def __init__(self, *args, **kwargs):
+        super(EditGroup, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'

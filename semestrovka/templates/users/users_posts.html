@@ -31,19 +31,19 @@
         {% endif %}
     {% endblock %}
     {% block content %}
-        <div>
+        <div class="mt-3 ml-3 text-light">
             {% if not posts %}
                 {% if pk == profile.pk %}
                     <p class="h2">You don't have your own publications yet.<p>
-                    <p class="h2">It's time to <a href="{% url 'create_post' %}">create</a> them!</p>
+                    <p class="h2">It's time to <a class="badge badge-light" href="{% url 'create_post' %}">create</a> them!</p>
                 {% else %}
-                    <h2>This user has no posts.</h2>
+                    <p class="h2">This user has no posts.</p>
                 {% endif %}
             {% endif %}
 
             {% for post in posts %}
-                <div class="pl-2">
-                    <p class="h2"><a href="{% url 'post' pk=post.pk%}">{{ post.title }}</a></p>
+                <div class="pb-1">
+                    <p class="h2"><a href="{% url 'post' pk=post.pk%}" class="badge badge-light">{{ post.title }}</a></p>
                 </div>
             {% endfor %}
         </div>
