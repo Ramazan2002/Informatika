@@ -34,11 +34,10 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.auth',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'users',
-    'posts',
+    'posts.apps.PostsConfig',
+    'users.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [
@@ -66,7 +65,6 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
         },
@@ -82,7 +80,7 @@ WSGI_APPLICATION = 'semestrovka.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'nydb',
+        'NAME': 'mydb',
         'USER': 'ramazan',
         'PASSWORD': 'zaropa51',
         'HOST': '127.0.0.1',

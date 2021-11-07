@@ -13,7 +13,7 @@ class show(View):
     def get(self, request, pk):
         post = Post.objects.get(id=pk)
         user_id = request.session.get('user_id', None)
-        comments = reversed(post.comment_set.all())
+        comments = post.comment_set.all().order_by("-id")
         form = CreateCommentForm()
         if user_id:
             user = CustomUser.objects.get(pk = user_id)
