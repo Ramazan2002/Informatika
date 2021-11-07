@@ -168,6 +168,7 @@ def admin(request):
     users = CustomUser.objects.raw('SELECT * FROM users_customuser')
     if request.method == 'GET':
         return render(request, 'users/admin.html', {'users': users})
+
 @staff_only
 def admin_update(request, pk):
     user = CustomUser.objects.get(pk=pk)
