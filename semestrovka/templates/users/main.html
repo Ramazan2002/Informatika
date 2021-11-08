@@ -1,54 +1,56 @@
 {% extends 'base.html' %}
-<head>
-    {% block title %}
-        AutoDP
-    {% endblock %}
-</head>
-<body>
-    {% block navigation %}
-        {% if not user_id %}
-            <div class="btn-group" role="group">
-            <a href="{% url 'login' %}" class="btn btn-dark" role="button">Log In</a>
-            <a href="{% url 'register' %}" class="btn btn-dark" role="button">Sign Up</a>
-            </div>
 
-        {% else %}
-            <div class="btn-group" role="group">
-                <a href="{% url 'create_post' %}" class="btn btn-dark" role="button">Create Post</a>
-                <div class="btn-group" role="group">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{ profile.name }}
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">
-                        <a class="dropdown-item" href="{% url 'profile' user_id %}">Profile</a>
-                        <a class="dropdown-item" href="{% url 'profile_posts' user_id %}">My Posts</a>
-                        <a class="dropdown-item" href="{% url 'profile_settings' %}">Settings</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{% url 'logout' %}">Log Out</a>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
-    {% endblock %}
-    {% block content %}
-        <div class="p-3">
-            {% for post in posts %}
-                <div class="card mb-4 w-75" style="cursor: pointer; background: #F3F6F4 !important;" onclick="location.href='{% url 'post' pk=post.pk %}'">
-                    <div class="card-body">
-                        <h3 class="card-title">{{ post.title }}</h3>
-                        <p class="card-text" style="overflow: hidden; text-overflow: ellipsis;display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;">{{ post.body|linebreaksbr }}</p>
-                        <p class="card-text"><small class="text-muted">Publicated by {{ post.author }} at {{ post.publication_date }}</small></p>
-                    </div>
-                    {% with post.imagesforpost_set.all|first as image %}
-                        {% if image %}
-                            <div class="card-body pt-0">
-                                <img class="card-img-bottom img-fluid rounded" src="{{ image.image.url }}" style="width: 100%; height: 35vw; object-fit: cover; image-rendering: auto";>
-                            </div>
-                        {% endif %}
-                    {% endwith %}
-                </div>
-            {% endfor %}
+{% block title %}
+    AutoDP
+{% endblock %}
+
+{% block navigation %}
+    {% if not user_id %}
+        <div class="btn-group" role="group">
+        <a href="{% url 'login' %}" class="btn btn-dark" role="button">Log In</a>
+        <a href="{% url 'register' %}" class="btn btn-dark" role="button">Sign Up</a>
         </div>
-    {% endblock %}
 
-</body>
+    {% else %}
+        <div class="btn-group" role="group">
+            <a href="{% url 'create_post' %}" class="btn btn-dark" role="button">Create Post</a>
+            <div class="btn-group" role="group">
+                <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ profile.name }}
+                </button>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">
+                    <a class="dropdown-item" href="{% url 'profile' user_id %}">Profile</a>
+                    <a class="dropdown-item" href="{% url 'profile_posts' user_id %}">My Posts</a>
+                    <a class="dropdown-item" href="{% url 'profile_settings' %}">Settings</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{% url 'logout' %}">Log Out</a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+{% block content %}
+    <div class="p-3">
+        {% for post in posts %}
+            <div class="card mb-4 w-75" style="cursor: pointer; background: #F3F6F4 !important;" onclick="location.href='{% url 'post' pk=post.pk %}'">
+                <div class="card-body">
+                    <h3 class="card-title">{{ post.title }}</h3>
+                    <p class="card-text" style="overflow: hidden; text-overflow: ellipsis;display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;">{{ post.body|linebreaksbr }}</p>
+                    <p class="card-text"><small class="text-muted">Publicated by {{ post.author }} at {{ post.publication_date }}</small></p>
+                </div>
+                {% with post.imagesforpost_set.all|first as image %}
+                    {% if image %}
+                        <div class="card-body pt-0">
+                            <img class="card-img-bottom img-fluid rounded" src="{{ image.image.url }}" style="width: 100%; height: 35vw; object-fit: cover; image-rendering: auto";>
+                        </div>
+                    {% endif %}
+                {% endwith %}
+                <div class="pl-3 pb-2">
+                    {% for tag in post.tag_set.all %}
+                        <a href="{% url 'tag' tag.pk %}" class="badge badge-secondary" style="font-size: 1.1em;">{{ tag.text }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

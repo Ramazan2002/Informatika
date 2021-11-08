@@ -1,43 +1,41 @@
 {% extends 'base.html' %}
-<head>
-    {% block title %}
-        Settings
-    {% endblock %}
-</head>
-<body>
-    {% block content %}
-        <div class="container">
-            <div class="text-center">
-                <div class="col-5 mx-auto pt-4">
-                    <div style="background: #F3F6F4 !important" class="jumbotron text-dark pt-4 pb-4">
-                        {% if success %}
-                            <div class="alert alert-success" role="alert">
-                                Changes saved
-                            </div>
-                        {% endif %}
 
-                        {% if failure %}
-                            <div class="alert alert-danger" role="alert">
-                                This email already exists
-                            </div>
-                        {% endif %}
+{% block title %}
+    Settings
+{% endblock %}
 
-                        <form method="post" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            {% for field in form %}
-                                <div class="form-group">
-                                    {{ field.label }}
-                                    {{ field }}
-                                </div>
-                            {% endfor %}
-                            <div class="pt-3">
-                                <input class="btn btn-success" type="submit" value="Save">
-                                <a class="btn btn-dark" href="{% url 'profile' pk=pk %}" role="button">Back</a>
+{% block content %}
+    <div class="container">
+        <div class="text-center">
+            <div class="col-5 mx-auto pt-4">
+                <div style="background: #F3F6F4 !important" class="jumbotron text-dark pt-4 pb-4">
+                    {% if success %}
+                        <div class="alert alert-success" role="alert">
+                            Changes saved
+                        </div>
+                    {% endif %}
+
+                    {% if failure %}
+                        <div class="alert alert-danger" role="alert">
+                            This email already exists
+                        </div>
+                    {% endif %}
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <div class="form-group">
+                                {{ field.label }}
+                                {{ field }}
                             </div>
-                        </form>
-                    </div>
+                        {% endfor %}
+                        <div class="pt-3">
+                            <input class="btn btn-success" type="submit" value="Save">
+                            <a class="btn btn-dark" href="{% url 'profile' pk=pk %}" role="button">Back</a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-    {% endblock %}
-</body>
+    </div>
+{% endblock %}

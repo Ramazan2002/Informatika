@@ -1,130 +1,133 @@
 {% extends 'base.html' %}
-<head>
-    {% block title %}
-        {{ post.title }}
-    {% endblock %}
-</head>
-<body>
-    {% block navigation %}
-        {% if not user_id %}
-            <div class="btn-group" role="group">
-            <a href="{% url 'login' %}" class="btn btn-dark " role="button">Log In</a>
-            <a href="{% url 'register' %}" class="btn btn-dark" role="button">Sign Up</a>
-            </div>
 
-        {% else %}
+{% block title %}
+    {{ post.title }}
+{% endblock %}
+
+{% block navigation %}
+    {% if not user_id %}
+        <div class="btn-group" role="group">
+        <a href="{% url 'login' %}" class="btn btn-dark " role="button">Log In</a>
+        <a href="{% url 'register' %}" class="btn btn-dark" role="button">Sign Up</a>
+        </div>
+
+    {% else %}
+        <div class="btn-group" role="group">
+            <a href="{% url 'create_post' %}" class="btn btn-dark" role="button">Create Post</a>
             <div class="btn-group" role="group">
-                <a href="{% url 'create_post' %}" class="btn btn-dark" role="button">Create Post</a>
-                <div class="btn-group" role="group">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{ profile.name }}
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">
-                        <a class="dropdown-item" href="{% url 'profile' user_id %}">Profile</a>
-                        <a class="dropdown-item" href="{% url 'profile_posts' user_id %}">My Posts</a>
-                        <a class="dropdown-item" href="{% url 'profile_settings' %}">Settings</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{% url 'logout' %}">Log Out</a>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
-    {% endblock %}
-    {% block content %}
-        <div class="container p-2 mt-3">
-            <div class="jumbotron jumbotron-fluid rounded pt-3 pl-2" style="background: #F3F6F4 !important">
-                <div class="container m-2">
-                    <h1 class="display-4">{{ post.title }}</h1>
-                    {% with post.imagesforpost_set.all as images %}
-                        {% if images %}
-                            <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-                                <div class="carousel-inner">
-                                    {% for image in post.imagesforpost_set.all %}
-                                        <div class="carousel-item">
-                                            <img class="d-block w-100 rounded" src="{{ image.image.url }}" style="width: 100%; height: 40vw; object-fit: cover;">
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                                <a class="carousel-control-prev" style="width: 10%" href="#carouselExampleControls" role="button" data-slide="prev">
-                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    <span class="sr-only">Previous</span>
-                                </a>
-                                <a class="carousel-control-next" style="width: 10%" href="#carouselExampleControls" role="button" data-slide="next">
-                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="sr-only">Next</span>
-                                </a>
-                            </div>
-                        {% endif %}
-                    {% endwith %}
-                    <p class="lead mt-3">{{ post.body|linebreaksbr }}</p>
-                    <p>Author: <a href="{% url 'profile' pk=post.author.pk %}">{{ post.author }}</a></p>
-                    <p>Date of publication: {{ post.publication_date }}</p>
-                    {% if post.author.user == profile.user or profile.user.group.name == 'admin' or profile.user.group.name == 'moder' %}
-                        <a class="btn btn-dark" href="{% url 'update_post' pk=post.id %}" role="button">Redact</a>
-                        <a class="btn btn-danger" href="{% url 'delete_post' pk=post.id %}" role="button">Delete post</a>
-                    {% endif %}
-                    {% if profile %}
-                    <form method="post" id="for_comment" data-href="{% url 'create_comment' post.pk %}">
-                        {% csrf_token %}
-                        <div class="form-group mt-4">
-                            <label for="id_text">Comment this</label>
-                            <textarea class="form-control" name="text" style="resize: none" id="id_text" rows="4" maxlength="100" required></textarea>
-                        </div>
-                        <input class="btn btn-dark" type="submit" value="Оставить комментарий">
-                    </form>
-                    {% endif %}
-                    <h2 class="display-5 pt-5">Комментарии</h2>
-                    <div id="all_comments">
-                        {% for comment in comments %}
-                            <div class="card mb-2" style="width: 40rem;">
-                                <div class="card-body">
-                                    <h5 class="card-title"><a href="{% url 'profile' comment.author.pk%}">{{ comment.author }}</a></h5>
-                                    <p class="card-text">{{ comment.text|linebreaksbr }}</p>
-                                    <p class="card-text ">{{ comment.publication_date }}</p>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
+                <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ profile.name }}
+                </button>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">
+                    <a class="dropdown-item" href="{% url 'profile' user_id %}">Profile</a>
+                    <a class="dropdown-item" href="{% url 'profile_posts' user_id %}">My Posts</a>
+                    <a class="dropdown-item" href="{% url 'profile_settings' %}">Settings</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{% url 'logout' %}">Log Out</a>
                 </div>
             </div>
         </div>
-    {% endblock %}
+    {% endif %}
+{% endblock %}
+{% block content %}
+    <div class="container p-2 mt-3">
+        <div class="jumbotron jumbotron-fluid rounded pt-3 pl-2" style="background: #F3F6F4 !important">
+            <div class="container m-2">
+                <h1 class="display-4">{{ post.title }}</h1>
+                {% with post.imagesforpost_set.all as images %}
+                    {% if images %}
+                        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                            <div class="carousel-inner">
+                                {% for image in post.imagesforpost_set.all %}
+                                    <div class="carousel-item">
+                                        <img class="d-block w-100 rounded" src="{{ image.image.url }}" style="width: 100%; height: 40vw; object-fit: cover;">
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <a class="carousel-control-prev" style="width: 10%" href="#carouselExampleControls" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" style="width: 10%" href="#carouselExampleControls" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                    {% endif %}
+                {% endwith %}
+                <p class="lead mt-3">{{ post.body|linebreaksbr }}</p>
+                <p>Author: <a href="{% url 'profile' pk=post.author.pk %}">{{ post.author }}</a></p>
+                <p>Date of publication: {{ post.publication_date }}</p>
+                <div class="pb-3">
+                    {% for tag in post.tag_set.all %}
+                        <a href="{% url 'tag' tag.pk %}" class="badge badge-warning">{{ tag.text }}</a>
+                    {% endfor %}
+                </div>
+                {% if post.author.user == profile.user or profile.user.group.name == 'admin' or profile.user.group.name == 'moder' %}
+                    <a class="btn btn-dark" href="{% url 'update_post' pk=post.id %}" role="button">Redact</a>
+                    <a class="btn btn-danger" href="{% url 'delete_post' pk=post.id %}" role="button">Delete post</a>
+                {% endif %}
+                {% if profile %}
+                <form method="post" id="for_comment" data-href="{% url 'create_comment' post.pk %}">
+                    {% csrf_token %}
+                    <div class="form-group mt-4">
+                        <label for="id_text">Comment this</label>
+                        <textarea class="form-control" name="text" style="resize: none" id="id_text" rows="4" maxlength="100" required></textarea>
+                    </div>
+                    <input class="btn btn-dark" type="submit" value="Оставить комментарий">
+                </form>
+                {% endif %}
+                <h2 class="display-5 pt-5">Комментарии</h2>
+                <div id="all_comments">
+                    {% for comment in comments %}
+                        <div class="card mb-2" style="width: 40rem;">
+                            <div class="card-body">
+                                <h5 class="card-title"><a href="{% url 'profile' comment.author.pk%}">{{ comment.author }}</a></h5>
+                                <p class="card-text">{{ comment.text|linebreaksbr }}</p>
+                                <p class="card-text ">{{ comment.publication_date }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
 
-    {% block javascript %}
-        <script>
-            $("#for_comment").submit(function (e) {
-                e.preventDefault();
-                var serializedData = $(this).serialize();
-                var postData = {csrfmiddlewaretoken: '{{ csrf_token }}'}
-                $.ajax({
-                    type: 'POST',
-                    url: "{% url 'create_comment' post.pk%}",
-                    data: serializedData, postData,
-                    success: function (response) {
-                        $("#for_comment").trigger('reset');
-                        var instance = JSON.parse(response["instance"]);
-                        var fields = instance[0]["fields"];
-                        var date = new Date(fields["publication_date"])
-                        $("#all_comments").prepend(`
-                            <div class="card mb-2" style="width: 40rem;">
-                                <div class="card-body">
-                                    <h5 class="card-title"><a href="/profile/${fields["author"]}">${fields["author"]}</a></h5>
-                                    <p class="card-text" style="white-space: pre-wrap">${fields["text"]}</p>
-                                    <p class="card-text">${date}</p>
-                                </div>
-                            </div>`
-                        )
-                    },
-                    error: function (response) {
-                        alert(response["responseJSON"]["error"]);
-                    }
-                })
+{% block javascript %}
+    <script>
+        $("#for_comment").submit(function (e) {
+            e.preventDefault();
+            var serializedData = $(this).serialize();
+            var postData = {csrfmiddlewaretoken: '{{ csrf_token }}'}
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'create_comment' post.pk%}",
+                data: serializedData, postData,
+                success: function (response) {
+                    $("#for_comment").trigger('reset');
+                    var instance = JSON.parse(response["instance"]);
+                    var fields = instance[0]["fields"];
+                    var date = new Date(fields["publication_date"])
+                    $("#all_comments").prepend(`
+                        <div class="card mb-2" style="width: 40rem;">
+                            <div class="card-body">
+                                <h5 class="card-title"><a href="/profile/${fields["author"]}">${fields["author"]}</a></h5>
+                                <p class="card-text" style="white-space: pre-wrap">${fields["text"]}</p>
+                                <p class="card-text">${date}</p>
+                            </div>
+                        </div>`
+                    )
+                },
+                error: function (response) {
+                    alert(response["responseJSON"]["error"]);
+                }
             })
-        </script>
-        <script>
-            $(document).ready(function () {
-                $('#carouselExampleControls').find('.carousel-item').first().addClass('active');
-            });
-        </script>
-    {% endblock javascript %}
-</body>
+        })
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#carouselExampleControls').find('.carousel-item').first().addClass('active');
+        });
+    </script>
+{% endblock javascript %}

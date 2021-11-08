@@ -10,7 +10,7 @@ class Post(models.Model):
     publication_date = models.DateTimeField(default=now(), editable=False)
 
     def __str__(self):
-        return str(self.title)
+        return self.title
 
 class ImagesForPost(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
@@ -25,3 +25,10 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"Comment by {self.author.name} on {self.post} at {self.publication_date.strftime('%H:%M %d.%m.%Y')}"
+
+class Tag(models.Model):
+    posts = models.ManyToManyField(Post, null=True, blank=True)
+    text = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.text

@@ -8,7 +8,7 @@ class Group(models.Model):
     description = models.CharField(max_length=50, default='standard user')
 
     def __str__(self):
-        return str(self.name)
+        return self.name
 
 
 class CustomUser(models.Model):
@@ -20,7 +20,7 @@ class CustomUser(models.Model):
     join_date = models.DateTimeField(default=now(), editable=False)
 
     def __str__(self):
-        return str(self.login)
+        return self.login
 
 
 class UserProfile(models.Model):
@@ -30,4 +30,4 @@ class UserProfile(models.Model):
     photo = models.ImageField(upload_to='user_avatars/', default='default_avatar/1.png')
 
     def __str__(self):
-        return str(self.name)
+        return self.name

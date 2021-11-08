@@ -6,6 +6,7 @@ from .models import UserProfile, CustomUser, Group
 class RegistrationForm(forms.Form):
     login = forms.CharField(max_length=20, required=True)
     password = forms.CharField(max_length=20, required=True, widget=forms.PasswordInput)
+    password_repeat = forms.CharField(max_length=20, required=True, widget=forms.PasswordInput)
 
     def clean_login(self):
         data = self.cleaned_data['login']
@@ -17,6 +18,12 @@ class RegistrationForm(forms.Form):
         data = self.cleaned_data['password']
         if len(data) < 5:
             raise ValidationError(_('Пароль должен быть длиной более 4 символов'), code='invalid')
+        return data
+
+    def clean_password_repeat(self):
+        data = self.cleaned_data['password_repeat']
+        if data != self.cleaned_data['password']:
+            raise ValidationError(_('Пароли не совпадают'), code='invalid')
         return data
 
 class AuthorizationForm(forms.Form):

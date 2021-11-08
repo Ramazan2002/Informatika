@@ -1,35 +1,33 @@
 {% extends 'base.html' %}
-<head>
-    {% block title %}
-        Admin Panel
-    {% endblock %}
-</head>
-<body>
-    {% block content %}
-        <div class="container">
-            <div class="col-6 mx-auto pt-4">
-                <div style="background: #F3F6F4 !important" class="jumbotron text-dark pt-4 pb-4">
-                    {% if success %}
-                        <div class="alert alert-success" role="alert">
-                            Changes saved
+
+{% block title %}
+    Admin Panel
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="col-6 mx-auto pt-4">
+            <div style="background: #F3F6F4 !important" class="jumbotron text-dark pt-4 pb-4">
+                {% if success %}
+                    <div class="alert alert-success" role="alert">
+                        Changes saved
+                    </div>
+                {% endif %}
+                <p>Login: {{ user }}</p>
+                <form method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="form-group">
+                            {{ field.label }}
+                            {{ field }}
                         </div>
-                    {% endif %}
-                    <p>Login: {{ user }}</p>
-                    <form method="post">
-                        {% csrf_token %}
-                        {% for field in form %}
-                            <div class="form-group">
-                                {{ field.label }}
-                                {{ field }}
-                            </div>
-                        {% endfor %}
-                        <div>
-                            <input class="btn btn-success" type="submit" value="Save">
-                            <a class="btn btn-dark" role="button" href="{% url 'admin' %}">Back</a>
-                        </div>
-                    </form>
-                </div>
+                    {% endfor %}
+                    <div>
+                        <input class="btn btn-success" type="submit" value="Save">
+                        <a class="btn btn-dark" role="button" href="{% url 'admin' %}">Back</a>
+                    </div>
+                </form>
             </div>
         </div>
-    {% endblock %}
-</body>
+    </div>
+{% endblock %}

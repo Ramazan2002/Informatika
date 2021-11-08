@@ -17,9 +17,7 @@ def staff_only(func):
     def wrapper(request, *args, **kwargs):
         if user_id:=request.session.get('user_id', None):
             user = CustomUser.objects.get(pk=user_id)
-            print(user.group)
             if user.group.name == 'admin':
-                print(123)
                 return func(request, *args, **kwargs)
             return render(request, 'users/admin.html', {'error': 1})
         return redirect('/login/')
@@ -28,7 +26,7 @@ def staff_only(func):
 
 def main(request):
     if request.method == 'GET':
-        posts_list = reversed(Post.objects.all())
+        posts_list = Post.objects.all().order_by("-id")
         user_id = request.session.get('user_id', None)
         if user_id:
             user = CustomUser.objects.get(pk=user_id)
@@ -56,6 +54,7 @@ def register(request):
         if user_id:
             return redirect('/')
         form = RegistrationForm()
+        print(form.fields)
         return render(request, 'users/register.html', {'form': form})
 
 
@@ -118,9 +117,12 @@ def profile_settings(request):
             if not form.cleaned_data['password'] == '':
                 password = make_password(form.cleaned_data['password'])
                 user.password = password
-            filter_profile = UserProfile.objects.filter(email=form.cleaned_data['email'])
-            if filter_profile.exists() and filter_profile[0].user != CustomUser.objects.get(pk=request.session['user_id']):
-                return render(request, 'users/profile_settings.html', {'form': form, 'pk':profile.pk, 'failure': 1})
+
+            if form.cleaned_data['email'] != '':
+                filter_profile = UserProfile.objects.filter(email=form.cleaned_data['email'])
+                if filter_profile.exists() and filter_profile[0].user != CustomUser.objects.get(pk=request.session['user_id']):
+                    return render(request, 'users/profile_settings.html', {'form': form, 'pk':profile.pk, 'failure': 1})
+
             saved_form = form.save(commit=False)
             user.save()
             saved_form.user = user
@@ -140,17 +142,17 @@ def profile_posts(request, pk):
             user = CustomUser.objects.get(pk=user_id)
             profile = UserProfile.objects.get(user=user)
             if profile.pk == pk:
-                posts = Post.objects.filter(author=profile)
+                posts = Post.objects.filter(author=profile).order_by("-id")
                 return render(request, 'users/users_posts.html', {'posts': posts, 'profile': profile,
                                                                   'pk': pk, 'user_id': user_id})
 
-            posts = Post.objects.filter(author=UserProfile.objects.get(pk=pk))
+            posts = Post.objects.filter(author=UserProfile.objects.get(pk=pk)).order_by("-id")
             return render(request, 'users/users_posts.html', {'posts': posts, 'profile': profile,
                                                                   'pk': pk, 'user_id': user_id})
 
         user = CustomUser.objects.get(pk=pk)
         profile = UserProfile.objects.get(user=user)
-        posts = Post.objects.filter(author=profile)
+        posts = Post.objects.filter(author=profile).order_by("-id")
         if len(posts) == 0:
             return render(request, 'users/users_posts.html', {'posts': posts, 'profile': profile, 'pk': user_id})
         return render(request, 'users/users_posts.html', {'posts': posts, 'profile': profile, 'pk': pk})
