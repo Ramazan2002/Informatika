@@ -3,13 +3,13 @@ from .models import Post, Comment, Tag
 from django.utils.translation import ugettext_lazy as _
 
 class CreatePostForm(forms.ModelForm):
-    images = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True}), required=False)
+    images = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True}), required=False, label='Images')
     class Meta:
         model = Post
         fields = ['title', 'body']
 
 class CreateFullPostForm(CreatePostForm):
-    tags = forms.ModelMultipleChoiceField(queryset=Tag.objects)
+    tags = forms.ModelMultipleChoiceField(queryset=Tag.objects, label='Tags', required=False)
 
     class Meta(CreatePostForm.Meta):
         fields = CreatePostForm.Meta.fields + ['images', 'tags']

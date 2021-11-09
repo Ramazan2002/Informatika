@@ -47,7 +47,7 @@
                 {% endwith %}
                 <div class="pl-3 pb-2">
                     {% for tag in post.tag_set.all %}
-                        <a href="{% url 'tag' tag.pk %}" class="badge badge-secondary" style="font-size: 1.1em;">{{ tag.text }}</a>
+                        <a href="{% url 'tag' tag.pk %}" class="badge badge-secondary" style="font-size: 1.05em;">{{ tag.text }}</a>
                     {% endfor %}
                 </div>
             </div>

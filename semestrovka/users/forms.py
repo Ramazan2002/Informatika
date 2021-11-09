@@ -4,9 +4,9 @@ from django.utils.translation import ugettext_lazy as _
 from .models import UserProfile, CustomUser, Group
 
 class RegistrationForm(forms.Form):
-    login = forms.CharField(max_length=20, required=True)
-    password = forms.CharField(max_length=20, required=True, widget=forms.PasswordInput)
-    password_repeat = forms.CharField(max_length=20, required=True, widget=forms.PasswordInput)
+    login = forms.CharField(max_length=20, required=True, label='login')
+    password = forms.CharField(max_length=20, required=True, widget=forms.PasswordInput, label='password')
+    password_repeat = forms.CharField(max_length=20, required=True, widget=forms.PasswordInput, label='password repeat')
 
     def clean_login(self):
         data = self.cleaned_data['login']
@@ -27,8 +27,8 @@ class RegistrationForm(forms.Form):
         return data
 
 class AuthorizationForm(forms.Form):
-    login = forms.CharField(max_length=20, required=True)
-    password = forms.CharField(max_length=20, required=True, widget=forms.PasswordInput)
+    login = forms.CharField(max_length=20, required=True, label='login')
+    password = forms.CharField(max_length=20, required=True, widget=forms.PasswordInput, label='password')
     remember_me = forms.BooleanField(required=False)
 
 

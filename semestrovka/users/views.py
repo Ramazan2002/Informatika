@@ -167,7 +167,7 @@ def logout(request):
 
 @staff_only
 def admin(request):
-    users = CustomUser.objects.raw('SELECT * FROM users_customuser')
+    users = CustomUser.objects.raw('SELECT * FROM users_customuser ORDER BY id')
     if request.method == 'GET':
         return render(request, 'users/admin.html', {'users': users})
 
