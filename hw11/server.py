@@ -3,6 +3,19 @@ from threading import Thread
 import pickle
 
 BUFFER = 1024
+class Example:
+	def __init__(self):
+		self.__name = None
+		self.__x = None
+		self.__y = None
+	def name(self):
+		return self.__name
+
+	def x(self):
+		return self.__x
+
+	def y(self):
+		return self.__y
 
 class Client:
 	def __init__(self):
@@ -67,15 +80,29 @@ class Server:
 				response = pickle.loads(response)
 				if new_client:
 					client.name = response
-					print(f'new client {client.address} with name: {response}')
+					if isinstance(response, Example):
+						print(f'new client {client.address} with name: {response.name}')
+					else:
+						print(f'new client {client.address} with name: {client.name}')
+
 					self.send_all(client, 'Привет всем, я новенький!')
-					client.connection.send(pickle.dumps(f'Ваше сообщение отправлено {response}'))
+					if isinstance(response, Example):
+						client.connection.send(pickle.dumps(f'Ваше сообщение отправлено'
+															f'{response.name, response.x, response.y}'))
+					else:
+						client.connection.send(pickle.dumps(f'Ваше сообщение отправлено, {response}'))
 				else:
-					print(f'from client {client.address} recieved: {response}')
-					self.send_all(client, response)
-					client.connection.send(pickle.dumps(f'Ваше сообщение отправлено {response}'))
+					if isinstance(response, Example):
+						print(f'from client {client.address} recieved: {response.name, response.x, response.y}')
+						self.send_all(client, f'{response.name, response.x, response.y}')
+						client.connection.send(pickle.dumps(f'Ваше сообщение отправлено {response.name, response.x, response.y}'))
+					else:
+						print(f'from client {client.address} recieved: {response}')
+						self.send_all(client, response)
+						client.connection.send(pickle.dumps(f'Ваше сообщение отправлено {response}'))
 			else:
 				raise Exception('Client disconnected')
+
 		except Exception:
 			self.close_client(client)
 			return False

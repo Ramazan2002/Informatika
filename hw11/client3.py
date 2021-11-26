@@ -2,8 +2,19 @@ import socket
 from threading import Thread
 import pickle
 from time import sleep
+from random import randint
 
 SIZE_OF_PART = 1024
+
+
+class Example:
+	def __init__(self, name, x, y):
+		self.name = name
+		self.x = x
+		self.y = y
+
+	def __str__(self):
+		return f'{self.name, self.x, self.y}'
 
 class Client3:
 	def __init__(self, ip, port):
@@ -13,7 +24,7 @@ class Client3:
 		return pickle.loads(self.sock.recv(SIZE_OF_PART))
 
 	def send(self):
-		data = ('string', [1,2,3], {1: 2, 2: 3, 4: 5}, {1, 2, 3}, ('s', 't', 'r'))
+		data = Example('example_name', randint(0, 10), randint(0, 10))
 		sleep(0.25)
 		self.sock.send(pickle.dumps(data))
 
