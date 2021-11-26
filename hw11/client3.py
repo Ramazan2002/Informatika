@@ -13,7 +13,6 @@ class Client3:
 		return pickle.loads(self.sock.recv(SIZE_OF_PART))
 
 	def send(self):
-		# data = pickle.dumps(Example('data_example', 1, 2))
 		data = ('string', [1,2,3], {1: 2, 2: 3, 4: 5}, {1, 2, 3}, ('s', 't', 'r'))
 		sleep(0.25)
 		self.sock.send(pickle.dumps(data))
