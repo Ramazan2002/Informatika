@@ -40,5 +40,5 @@ class Client:
 		self.sock.close()
 		print('exit')
 
-client = Client('localhost', 8081)
+client = Client('localhost', 8080)
 client.loop()
